@@ -1,41 +1,64 @@
-# Project Todo List
+# MarkFlow
 
-- [x] **Task 1: Project Setup and Core UI Integration**
-  - Initialize the Nuxt.js project, integrate Tailwind CSS and shadcn-vue, and set up the basic application structure including app.vue and the main index page.
+MarkFlow is a personal Markdown editor and annotation tool. I built it to streamline my own process of working with text, analyzing content, and refining prompts, particularly for interactions with AI models.
 
-- [x] **Task 2: Implement Basic Two-Panel Layout and Header**
-  - Implement the main two-panel layout for the editor and preview areas and create a placeholder for the header toolbar.
-  - [x] Subtask 2.1: Create Base Page Structure
-    - Set up the fundamental HTML structure within `pages/index.vue`, including a main container, a header element, and a main content area container.
-  - [x] Subtask 2.2: Implement Two-Panel Layout Container
-    - Apply Tailwind CSS flexbox or grid classes to the main content area container created in the previous step to establish a two-column layout structure.
-  - [x] Subtask 2.3: Add Editor and Preview Panel Placeholders
-    - Insert two distinct `<div>` elements inside the two-panel layout container to serve as placeholders for the editor and preview areas.
-  - [x] Subtask 2.4: Apply Basic Visual Styling to Panels and Header
-    - Add temporary background colors or borders using Tailwind CSS to the header placeholder and the editor/preview panel placeholders to make them visually distinct and confirm the layout structure.
-  - [x] Subtask 2.5: Configure Layout to Fill Available Space
-    - Adjust Tailwind CSS classes to ensure the main content area (editor/preview panels) occupies the remaining vertical space below the header and that the panels divide the horizontal space appropriately.
+**Please Note:**
+*   This tool is primarily designed for my personal workflow and specific use cases.
+*   It is **not built for mobile view** and is best used on a desktop browser.
 
-- [x] **Task 3: Create Markdown Editor Component**
-  - Create a component for the Markdown editor panel, initially using a simple textarea.
+## Core Features
 
-- [x] **Task 4: Integrate Markdown Parser and Create Live Preview**
-  - Integrate a Markdown parsing library (e.g., marked.js) and create a component for the live preview panel, connecting it to the editor's content for real-time rendering.
+MarkFlow currently offers the following functionalities:
 
-- [x] **Task 5: Implement View Mode Switching**
-  - Implement the UI controls and logic in the header toolbar to switch between Editor Only, Preview Only, and Split View modes.
+1.  **Markdown Editor & Live Preview:**
+    *   A straightforward Markdown editor (using a basic textarea) alongside a live HTML preview panel.
+    *   The preview is rendered using `markdown-it` and includes syntax highlighting for code blocks via `highlight.js`.
 
-- [x] **Task 6: Implement Text Selection Detection in Preview**
-  - Add JavaScript event listeners to the Markdown preview panel to detect user text selections.
+2.  **Flexible View Modes:**
+    *   Easily switch between different layouts using toolbar buttons (or `Ctrl+1` to cycle):
+        *   Editor Only
+        *   Preview Only
+        *   Editor & Preview (side-by-side)
+        *   Preview & Annotations (preview alongside the annotation management panel)
 
-- [x] **Task 7: Implement Basic Annotation Input UI**
-  - Upon text selection in the preview, display an 'Add Comment' UI element and a modal for users to input their comment using shadcn-vue components.
+3.  **Text Annotation Workflow:**
+    *   Select any text directly in the live preview panel.
+    *   Right-click the selection or use the `Ctrl+/` shortcut (when not focused on an input and text is selected) to open an input popover.
+    *   Add your comments or notes related to the selected text (`Ctrl+Enter` to submit, `Esc` to cancel from popover).
 
-- [ ] **Task 8: Implement Annotation Data Structure and Visual Highlighting**
-  - Store the selected text and comment data in a structured format and visually distinguish the selected text in the preview panel.
+4.  **Annotation Management Panel:**
+    *   When in "Preview & Annotations" view mode, a dedicated "Annotations" panel lists all your created annotations.
+    *   Each annotation card displays the original text you selected and its associated comment(s).
+    *   You can add multiple comments to a single text selection using the "Add Comment" button on an annotation card.
+    *   Edit or delete individual comments within an annotation via a dropdown menu on each comment (opens a dialog for editing, `Ctrl+Enter` to save).
+    *   Delete entire annotations (the selected text and all its comments).
+    *   A "Clear All" button allows removing all annotations at once.
 
-- [ ] **Task 9: Implement Local Data Persistence**
-  - Implement saving and loading of the Markdown content and the list of annotations using the browser's localStorage API.
+5.  **Prompt Generation:**
+    *   A "Generate Prompt" button in the header (shortcut `Alt+P`) compiles all your annotations (selected text snippets and their corresponding comments) into a single, structured text.
+    *   This compiled text is automatically copied to your clipboard, ready for use. Toast notifications confirm success or provide feedback.
 
-- [ ] **Task 10: Implement Concatenated Prompt Generation**
-  - Add a button to generate a concatenated prompt from all annotations and display it in a modal with a copy-to-clipboard option.
+6.  **Command Palette:**
+    *   Access common actions quickly using the command palette. It can be opened via a "Help" (?) button in the header or the `Ctrl+/` shortcut (when not focused on an input and no text is selected in preview).
+    *   Available commands include:
+        *   Generate & Copy Prompt (`Alt+P`)
+        *   Clear All Annotations (`Alt+K`)
+        *   Cycle View Modes (`Ctrl+1`)
+
+7.  **User Interface & Experience:**
+    *   Built with a clean, modern UI using shadcn-vue and Tailwind CSS.
+    *   Includes light and dark mode support (via OS preference or future toggle).
+    *   Toast notifications for feedback on actions (e.g., copy success, errors).
+
+## Technology Stack
+
+*   **Framework:** Nuxt.js (v3)
+*   **UI Library:** Vue.js (v3)
+*   **Styling:** Tailwind CSS
+*   **UI Components:** shadcn-vue (reka-ui primitives)
+*   **Markdown Parsing:** `markdown-it`
+*   **Syntax Highlighting:** `highlight.js`
+*   **State Management:** Pinia
+*   **Icons:** Lucide Icons
+*   **Clipboard:** VueUse `@vueuse/core`
+*   **Keyboard Shortcuts:** VueUse `@vueuse/core`
