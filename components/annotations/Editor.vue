@@ -1,55 +1,63 @@
 <script setup lang="ts">
-import { Trash2, Edit3, PlusCircle } from "lucide-vue-next";
 import type { Annotation, Comment } from "@/stores/annotationStore";
+import {
+  Trash2,
+  Edit3,
+  PlusCircle,
+  MoreVertical,
+  BookMarked,
+} from "lucide-vue-next";
 
 const annotationStore = useAnnotationStore();
 
-const showEditDialog = ref(false);
+const showEditCommentDialog = ref(false);
 const showAddCommentDialog = ref(false);
-const currentAnnotationToEdit = ref<Annotation | null>(null);
-const currentCommentToEdit = ref<Comment | null>(null);
-const editText = ref("");
+
+const activeAnnotationId = ref<string | null>(null);
+const activeCommentId = ref<string | null>(null);
+
+const commentInputText = ref("");
 
 const openEditCommentDialog = (annotation: Annotation, comment: Comment) => {
-  currentAnnotationToEdit.value = annotation;
-  currentCommentToEdit.value = comment;
-  editText.value = comment.text;
-  showEditDialog.value = true;
+  activeAnnotationId.value = annotation.id;
+  activeCommentId.value = comment.commentId;
+  commentInputText.value = comment.text;
+  showEditCommentDialog.value = true;
 };
 
 const handleUpdateComment = () => {
   if (
-    currentAnnotationToEdit.value &&
-    currentCommentToEdit.value &&
-    editText.value.trim()
+    activeAnnotationId.value &&
+    activeCommentId.value &&
+    commentInputText.value.trim()
   ) {
     annotationStore.updateComment(
-      currentAnnotationToEdit.value.id,
-      currentCommentToEdit.value.commentId,
-      editText.value.trim()
+      activeAnnotationId.value,
+      activeCommentId.value,
+      commentInputText.value.trim()
     );
   }
-  closeEditDialog();
+  closeEditCommentDialog();
 };
 
-const closeEditDialog = () => {
-  showEditDialog.value = false;
-  currentAnnotationToEdit.value = null;
-  currentCommentToEdit.value = null;
-  editText.value = "";
+const closeEditCommentDialog = () => {
+  showEditCommentDialog.value = false;
+  activeAnnotationId.value = null;
+  activeCommentId.value = null;
+  commentInputText.value = "";
 };
 
 const openAddCommentDialog = (annotation: Annotation) => {
-  currentAnnotationToEdit.value = annotation;
-  editText.value = "";
+  activeAnnotationId.value = annotation.id;
+  commentInputText.value = "";
   showAddCommentDialog.value = true;
 };
 
 const handleAddCommentToAnnotation = () => {
-  if (currentAnnotationToEdit.value && editText.value.trim()) {
+  if (activeAnnotationId.value && commentInputText.value.trim()) {
     annotationStore.addCommentToAnnotation(
-      currentAnnotationToEdit.value.id,
-      editText.value.trim()
+      activeAnnotationId.value,
+      commentInputText.value.trim()
     );
   }
   closeAddCommentDialog();
@@ -57,22 +65,25 @@ const handleAddCommentToAnnotation = () => {
 
 const closeAddCommentDialog = () => {
   showAddCommentDialog.value = false;
-  currentAnnotationToEdit.value = null;
-  editText.value = "";
+  activeAnnotationId.value = null;
+  commentInputText.value = "";
 };
 
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp).toLocaleString();
-};
+const getCurrentAnnotationForDialog = computed(() => {
+  if (activeAnnotationId.value) {
+    return annotationStore.getAnnotationById(activeAnnotationId.value);
+  }
+  return null;
+});
 </script>
 
 <template>
   <div class="flex h-full flex-col p-4">
-    <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-xl font-semibold">Annotations</h2>
+    <div class="mb-4 flex items-center justify-between pb-2">
+      <h2 class="text-xl font-semibold tracking-tight">Annotations</h2>
       <Button
         v-if="annotationStore.getAnnotations.length > 0"
-        variant="destructive"
+        variant="outline"
         size="sm"
         @click="annotationStore.clearAllAnnotations()"
       >
@@ -82,121 +93,117 @@ const formatDate = (timestamp: number) => {
 
     <div
       v-if="annotationStore.getAnnotations.length === 0"
-      class="text-muted-foreground flex flex-1 items-center justify-center text-center"
+      class="text-muted-foreground flex flex-1 flex-col items-center justify-center space-y-2 text-center"
     >
-      <div>
-        <p class="mb-1 text-lg">No annotations yet.</p>
-        <p class="text-sm">
-          Select text in the preview and right-click (or Ctrl+/) to add a
-          comment.
-        </p>
-      </div>
+      <BookMarked class="h-12 w-12 opacity-50" />
+      <p class="text-base font-medium">No annotations yet.</p>
+      <p class="max-w-xs text-sm">
+        Select text in the preview panel, then right-click or use Ctrl+/ to add
+        your first comment.
+      </p>
     </div>
 
-    <div v-else class="flex-1 space-y-4 overflow-y-auto pr-2">
+    <div v-else class="flex-1 space-y-5 overflow-y-auto pr-1">
       <div
-        v-for="annotation in annotationStore.getAnnotations"
+        v-for="annotation in annotationStore.getAnnotations.toReversed()"
         :key="annotation.id"
-        class="bg-card rounded-lg border p-4 shadow-sm"
+        class="group/annotation-card bg-card rounded-lg border shadow-sm transition-shadow hover:shadow-md"
       >
-        <div class="mb-3 border-b pb-2">
-          <p
-            class="text-muted-foreground text-sm font-medium italic"
-            :title="`Annotated on: ${formatDate(annotation.createdAt)}`"
-          >
+        <div class="bg-muted/30 border-b px-4 py-3">
+          <p class="text-foreground/80 truncate text-sm font-medium italic">
             "{{ annotation.selectedText }}"
           </p>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-px p-2">
           <div
             v-for="comment in annotation.comments"
             :key="comment.commentId"
-            class="group bg-muted/50 relative rounded-md p-3"
+            class="group/comment-item hover:bg-muted/50 relative flex items-center justify-between rounded-md px-2 py-2.5"
           >
-            <p class="text-foreground text-sm whitespace-pre-wrap">
+            <p class="text-foreground flex-1 pr-8 text-sm whitespace-pre-wrap">
               {{ comment.text }}
             </p>
-            <p
-              class="text-muted-foreground/80 mt-1 text-xs"
-              :title="`Last updated: ${formatDate(comment.updatedAt)}`"
-            >
-              {{ formatDate(comment.createdAt) }}
-              <span v-if="comment.createdAt !== comment.updatedAt"
-                >(edited)</span
-              >
-            </p>
             <div
-              class="absolute top-2 right-2 flex space-x-1 opacity-0 transition-opacity group-hover:opacity-100"
+              class="absolute top-1/2 right-1 -translate-y-1/2 opacity-0 transition-opacity group-hover/comment-item:opacity-100"
             >
-              <Button
-                variant="ghost"
-                size="icon"
-                class="h-6 w-6"
-                title="Edit comment"
-                @click="openEditCommentDialog(annotation, comment)"
-              >
-                <Edit3 class="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                class="text-destructive hover:bg-destructive/10 hover:text-destructive h-6 w-6"
-                title="Delete comment"
-                @click="
-                  annotationStore.deleteComment(
-                    annotation.id,
-                    comment.commentId
-                  )
-                "
-              >
-                <Trash2 class="h-3.5 w-3.5" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button variant="ghost" size="icon-sm" class="h-7 w-7">
+                    <MoreVertical class="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    @click="openEditCommentDialog(annotation, comment)"
+                  >
+                    <Edit3 class="mr-2 h-4 w-4" />
+                    Edit Comment
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    class="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                    @click="
+                      annotationStore.deleteComment(
+                        annotation.id,
+                        comment.commentId
+                      )
+                    "
+                  >
+                    <Trash2 class="mr-2 h-4 w-4" />
+                    Delete Comment
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>
 
-        <div class="mt-3 flex items-center justify-between pt-2">
+        <div class="flex items-center justify-end space-x-2 border-t px-4 py-2">
           <Button
             variant="outline"
             size="sm"
-            class="text-xs"
             @click="openAddCommentDialog(annotation)"
           >
-            <PlusCircle class="mr-1.5 h-3.5 w-3.5" />
+            <PlusCircle class="mr-1.5 h-4 w-4" />
             Add Comment
           </Button>
           <Button
-            variant="link"
+            variant="ghost"
             size="sm"
-            class="text-destructive hover:text-destructive/80 text-xs"
+            class="text-destructive hover:bg-destructive/10 hover:text-destructive"
             @click="annotationStore.deleteAnnotation(annotation.id)"
           >
+            <Trash2 class="mr-1.5 h-4 w-4" />
             Delete Annotation
           </Button>
         </div>
       </div>
     </div>
 
-    <Dialog v-model:open="showEditDialog">
-      <DialogContent class="sm:max-w-[425px]">
+    <Dialog v-model:open="showEditCommentDialog">
+      <DialogContent class="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Comment</DialogTitle>
           <DialogDescription>
-            Make changes to your comment below. Click save when you're done.
+            Modify your comment for the selected text:
+            <strong class="mt-1 block truncate italic">
+              "{{ getCurrentAnnotationForDialog?.selectedText }}"
+            </strong>
           </DialogDescription>
         </DialogHeader>
-        <div class="py-4">
+        <div class="py-2">
           <Textarea
-            v-model="editText"
+            v-model="commentInputText"
             placeholder="Edit your comment..."
-            class="min-h-[100px]"
+            class="min-h-[120px] resize-none"
             @keydown.enter.ctrl="handleUpdateComment"
           />
         </div>
         <DialogFooter>
           <DialogClose as-child>
-            <Button variant="outline" @click="closeEditDialog">Cancel</Button>
+            <Button variant="outline" @click="closeEditCommentDialog"
+              >Cancel</Button
+            >
           </DialogClose>
           <Button @click="handleUpdateComment">Save Changes</Button>
         </DialogFooter>
@@ -204,20 +211,21 @@ const formatDate = (timestamp: number) => {
     </Dialog>
 
     <Dialog v-model:open="showAddCommentDialog">
-      <DialogContent class="sm:max-w-[425px]">
+      <DialogContent class="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Comment</DialogTitle>
           <DialogDescription>
-            Add another comment to "{{
-              currentAnnotationToEdit?.selectedText
-            }}".
+            Add a new comment to the selected text:
+            <strong class="mt-1 block truncate italic">
+              "{{ getCurrentAnnotationForDialog?.selectedText }}"
+            </strong>
           </DialogDescription>
         </DialogHeader>
-        <div class="py-4">
+        <div class="py-2">
           <Textarea
-            v-model="editText"
+            v-model="commentInputText"
             placeholder="Type your new comment..."
-            class="min-h-[100px]"
+            class="min-h-[120px] resize-none"
             @keydown.enter.ctrl="handleAddCommentToAnnotation"
           />
         </div>
