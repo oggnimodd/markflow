@@ -129,7 +129,7 @@ const getCurrentAnnotationForDialog = computed(() => {
             >
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
-                  <Button variant="ghost" size="icon-sm" class="h-7 w-7">
+                  <Button variant="ghost" size="icon" class="h-7 w-7">
                     <MoreVertical class="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -186,7 +186,7 @@ const getCurrentAnnotationForDialog = computed(() => {
           <DialogTitle>Edit Comment</DialogTitle>
           <DialogDescription>
             Modify your comment for the selected text:
-            <strong class="mt-1 block truncate italic">
+            <strong class="text-foreground/90 mt-1 block break-words italic">
               "{{ getCurrentAnnotationForDialog?.selectedText }}"
             </strong>
           </DialogDescription>
@@ -216,7 +216,7 @@ const getCurrentAnnotationForDialog = computed(() => {
           <DialogTitle>Add New Comment</DialogTitle>
           <DialogDescription>
             Add a new comment to the selected text:
-            <strong class="mt-1 block truncate italic">
+            <strong class="text-foreground/90 mt-1 block break-words italic">
               "{{ getCurrentAnnotationForDialog?.selectedText }}"
             </strong>
           </DialogDescription>
