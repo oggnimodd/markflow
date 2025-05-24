@@ -1,0 +1,4 @@
+/* Remove paddings and backgrounds from pre */
+.prose pre {
+  @apply p-0 bg-transparent;
+}

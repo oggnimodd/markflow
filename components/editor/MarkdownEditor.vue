@@ -13,7 +13,7 @@ const editorContent = computed({
   <textarea
     v-model="editorContent"
     placeholder="Start typing your Markdown here..."
-    class="block h-full w-full resize-none border-none bg-transparent p-0 text-lg focus:ring-0 focus:outline-none"
+    class="block h-full w-full resize-none border-none bg-transparent p-0 focus:ring-0 focus:outline-none"
     spellcheck="false"
   ></textarea>
 </template>

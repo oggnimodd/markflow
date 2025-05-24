@@ -16,10 +16,10 @@
   - [x] Subtask 2.5: Configure Layout to Fill Available Space
     - Adjust Tailwind CSS classes to ensure the main content area (editor/preview panels) occupies the remaining vertical space below the header and that the panels divide the horizontal space appropriately.
 
-- [ ] **Task 3: Create Markdown Editor Component**
+- [x] **Task 3: Create Markdown Editor Component**
   - Create a component for the Markdown editor panel, initially using a simple textarea.
 
-- [ ] **Task 4: Integrate Markdown Parser and Create Live Preview**
+- [x] **Task 4: Integrate Markdown Parser and Create Live Preview**
   - Integrate a Markdown parsing library (e.g., marked.js) and create a component for the live preview panel, connecting it to the editor's content for real-time rendering.
 
 - [ ] **Task 5: Implement View Mode Switching**
