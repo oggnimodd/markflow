@@ -3,14 +3,7 @@ import { cn } from "~/lib/utils";
 
 const viewConfigStore = useViewConfigStore();
 
-const editorPanelClasses = computed(() =>
-  cn(
-    "bg-card text-card-foreground overflow-y-auto p-4",
-    viewConfigStore.currentViewMode === "split" ? "flex-1" : "w-full"
-  )
-);
-
-const previewPanelClasses = computed(() =>
+const panelClass = computed(() =>
   cn(
     "bg-card text-card-foreground overflow-y-auto p-4",
     viewConfigStore.currentViewMode === "split" ? "flex-1" : "w-full"
@@ -23,7 +16,7 @@ const previewPanelClasses = computed(() =>
     <AppHeader />
 
     <main class="flex flex-1 flex-row overflow-hidden">
-      <div v-if="viewConfigStore.showEditor" :class="editorPanelClasses">
+      <div v-if="viewConfigStore.showEditor" :class="panelClass">
         <EditorMarkdownEditor />
       </div>
 
@@ -32,7 +25,7 @@ const previewPanelClasses = computed(() =>
         class="bg-border w-px shrink-0"
       ></div>
 
-      <div v-if="viewConfigStore.showPreview" :class="previewPanelClasses">
+      <div v-if="viewConfigStore.showPreview" :class="panelClass">
         <EditorMarkdownPreview />
       </div>
     </main>
