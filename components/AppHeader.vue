@@ -11,17 +11,11 @@ import { toast } from "vue-sonner";
 import { generateConcatenatedPrompt } from "@/lib/generatePrompt";
 
 const annotationStore = useAnnotationStore();
+const commandPaletteStore = useCommandPaletteStore();
 const { copy, copied, isSupported } = useClipboard({ legacy: true });
 
 const activeElement = useActiveElement();
-const notUsingInput = computed(
-  () =>
-    activeElement.value?.tagName !== "INPUT" &&
-    activeElement.value?.tagName !== "TEXTAREA" &&
-    !activeElement.value?.isContentEditable
-);
-
-const showShortcutsGuide = ref(false);
+const notUsingInput = computed(() => !activeElement.value?.isContentEditable);
 
 const handleGenerateAndCopyPrompt = async () => {
   if (!isSupported.value) {
@@ -50,21 +44,21 @@ watch(copied, (isCopied) => {
 
 const handleClearAllAnnotations = () => {
   if (annotationStore.getAnnotations.length === 0) {
-    toast.info("There are no annotations to clear.");
+    toast.info("No annotations to clear.");
     return;
   }
   annotationStore.clearAllAnnotations();
   toast.success("All annotations cleared!");
 };
 
-const { alt_k, alt_p, shift_slash } = useMagicKeys({
+const { ctrl_slash, alt_k, alt_p } = useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (notUsingInput.value) {
       if (
-        (e.altKey && e.key === "k" && e.type === "keydown") ||
-        (e.altKey && e.key === "p" && e.type === "keydown") ||
-        (e.shiftKey && e.key === "/" && e.type === "keydown")
+        (e.altKey && e.key.toLowerCase() === "k" && e.type === "keydown") ||
+        (e.altKey && e.key.toLowerCase() === "p" && e.type === "keydown") ||
+        (e.ctrlKey && e.key === "/" && e.type === "keydown")
       ) {
         e.preventDefault();
       }
@@ -80,8 +74,8 @@ whenever(logicAnd(alt_p, notUsingInput), () => {
   handleGenerateAndCopyPrompt();
 });
 
-whenever(logicAnd(shift_slash, notUsingInput), () => {
-  showShortcutsGuide.value = !showShortcutsGuide.value;
+whenever(logicAnd(ctrl_slash, notUsingInput), () => {
+  commandPaletteStore.toggleCommandPalette();
 });
 </script>
 
@@ -105,15 +99,11 @@ whenever(logicAnd(shift_slash, notUsingInput), () => {
       <Button
         variant="outline"
         size="icon"
-        @click="showShortcutsGuide = true"
-        title="Keyboard Shortcuts (?)"
+        @click="commandPaletteStore.openCommandPalette()"
+        title="Open Command Palette (?)"
       >
         <HelpCircle class="h-5 w-5" />
       </Button>
     </div>
-
-    <Dialog v-model:open="showShortcutsGuide">
-      <KeyboardShortcutsGuide />
-    </Dialog>
   </header>
 </template>
