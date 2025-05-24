@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 
-export type ViewMode = "editor" | "preview" | "split";
+export type ViewMode =
+  | "editor"
+  | "preview"
+  | "editorAndPreview"
+  | "previewAndAnnotations";
 
 interface ViewConfigState {
   currentViewMode: ViewMode;
@@ -8,7 +12,7 @@ interface ViewConfigState {
 
 export const useViewConfigStore = defineStore("viewConfig", {
   state: (): ViewConfigState => ({
-    currentViewMode: "split",
+    currentViewMode: "editorAndPreview",
   }),
   actions: {
     setViewMode(mode: ViewMode) {
@@ -16,9 +20,23 @@ export const useViewConfigStore = defineStore("viewConfig", {
     },
   },
   getters: {
-    showEditor: (state) =>
-      state.currentViewMode === "editor" || state.currentViewMode === "split",
-    showPreview: (state) =>
-      state.currentViewMode === "preview" || state.currentViewMode === "split",
+    showEditor: (state): boolean =>
+      state.currentViewMode === "editor" ||
+      state.currentViewMode === "editorAndPreview",
+
+    showPreview: (state): boolean =>
+      state.currentViewMode === "preview" ||
+      state.currentViewMode === "editorAndPreview" ||
+      state.currentViewMode === "previewAndAnnotations",
+
+    showAnnotationsPanel: (state): boolean =>
+      state.currentViewMode === "previewAndAnnotations",
+
+    isSinglePanelMode: (state): boolean =>
+      state.currentViewMode === "editor" || state.currentViewMode === "preview",
+
+    isTwoPanelMode: (state): boolean =>
+      state.currentViewMode === "editorAndPreview" ||
+      state.currentViewMode === "previewAndAnnotations",
   },
 });

@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { PanelLeft, PanelRight, Columns2 } from "lucide-vue-next";
+import {
+  PanelLeft,
+  PanelRight,
+  Columns2,
+  ClipboardList,
+} from "lucide-vue-next";
 
 const viewConfigStore = useViewConfigStore();
 </script>
@@ -18,16 +23,6 @@ const viewConfigStore = useViewConfigStore();
     </Button>
     <Button
       :variant="
-        viewConfigStore.currentViewMode === 'split' ? 'secondary' : 'ghost'
-      "
-      size="icon"
-      @click="viewConfigStore.setViewMode('split')"
-      title="Split View"
-    >
-      <Columns2 class="h-5 w-5" />
-    </Button>
-    <Button
-      :variant="
         viewConfigStore.currentViewMode === 'preview' ? 'secondary' : 'ghost'
       "
       size="icon"
@@ -35,6 +30,30 @@ const viewConfigStore = useViewConfigStore();
       title="Preview Only"
     >
       <PanelRight class="h-5 w-5" />
+    </Button>
+    <Button
+      :variant="
+        viewConfigStore.currentViewMode === 'editorAndPreview'
+          ? 'secondary'
+          : 'ghost'
+      "
+      size="icon"
+      @click="viewConfigStore.setViewMode('editorAndPreview')"
+      title="Editor & Preview"
+    >
+      <Columns2 class="h-5 w-5" />
+    </Button>
+    <Button
+      :variant="
+        viewConfigStore.currentViewMode === 'previewAndAnnotations'
+          ? 'secondary'
+          : 'ghost'
+      "
+      size="icon"
+      @click="viewConfigStore.setViewMode('previewAndAnnotations')"
+      title="Preview & Annotations"
+    >
+      <ClipboardList class="h-5 w-5" />
     </Button>
   </div>
 </template>

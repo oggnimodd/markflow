@@ -14,6 +14,7 @@ const VIEWPORT_PADDING = 16;
 
 const documentStore = useDocumentStore();
 const selectionStore = useSelectionStore();
+const annotationStore = useAnnotationStore();
 
 const previewPanelRef = ref<HTMLDivElement | null>(null);
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
@@ -130,9 +131,10 @@ const handleClickOutside = (event: MouseEvent) => {
 
 const handleCommentSubmit = () => {
   if (commentText.value.trim() && selectionStore.currentSelection) {
-    // Handle comment submission here
-    console.log("Comment:", commentText.value.trim());
-    console.log("Selected text:", selectionStore.currentSelection.text);
+    annotationStore.addCommentToAnnotation(
+      selectionStore.currentSelection.text,
+      commentText.value.trim()
+    );
     closeCommentPopover();
   }
 };
