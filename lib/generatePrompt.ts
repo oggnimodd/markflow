@@ -3,41 +3,32 @@ import type { Annotation } from "@/stores/annotationStore";
 export function generateConcatenatedPrompt(
   annotations: Readonly<Annotation[]>
 ): string {
-  if (!annotations || annotations.length === 0) {
+  if (!annotations?.length) {
     return "No annotations were provided to generate a prompt.";
   }
 
-  let promptParts: string[] = [];
-  promptParts.push(
-    "Please analyze the following text segments and my corresponding notes or questions."
-  );
-  promptParts.push(
-    "For each segment, I will provide the original text excerpt and then my comments related to it."
-  );
-  promptParts.push("---");
+  const header = [
+    "Please analyze the following text segments and my corresponding notes or questions.",
+    "For each segment, I will provide the original text excerpt and then my comments related to it.",
+    "---",
+  ];
 
-  annotations.forEach((annotation, index) => {
-    promptParts.push(`\n[Text Segment ${index + 1}]`);
-    promptParts.push(
-      `Excerpt:\n> ${annotation.selectedText.replace(/\n/g, "\n> ")}\n`
-    );
+  const body = annotations.flatMap((annotation, idx) => {
+    const segmentHeader = `\n[Text Segment ${idx + 1}]`;
+    const excerpt = `Excerpt:\n> ${annotation.selectedText.replace(/\n/g, "\n> ")}`;
+    const notes =
+      annotation.comments && annotation.comments.length
+        ? [
+            `My Notes/Questions for Segment ${idx + 1}:`,
+            ...annotation.comments.map((c) => `- ${c.text}`),
+          ]
+        : ["I have no specific notes or questions for this segment."];
 
-    if (annotation.comments && annotation.comments.length > 0) {
-      promptParts.push(`My Notes/Questions for Segment ${index + 1}:`);
-      annotation.comments.forEach((comment) => {
-        promptParts.push(`- ${comment.text}`);
-      });
-    } else {
-      promptParts.push(
-        `I have no specific notes or questions for this segment.`
-      );
-    }
-    promptParts.push("---");
+    return [...segmentHeader.split("\n"), excerpt, ...notes, "---"];
   });
 
-  promptParts.push(
-    "\nPlease provide a comprehensive response based on all the segments and notes provided above."
-  );
+  const footer =
+    "Hi there! Here are my comments for your response; I have several things I'd like to discuss.";
 
-  return promptParts.join("\n");
+  return [...header, ...body, footer].join("\n");
 }
