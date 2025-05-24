@@ -1,17 +1,38 @@
+<script setup lang="ts">
+import { cn } from "~/lib/utils";
+
+const viewConfigStore = useViewConfigStore();
+
+const editorPanelClasses = computed(() =>
+  cn(
+    "bg-card text-card-foreground overflow-y-auto p-4",
+    viewConfigStore.currentViewMode === "split" ? "flex-1" : "w-full"
+  )
+);
+
+const previewPanelClasses = computed(() =>
+  cn(
+    "bg-card text-card-foreground overflow-y-auto p-4",
+    viewConfigStore.currentViewMode === "split" ? "flex-1" : "w-full"
+  )
+);
+</script>
+
 <template>
   <div class="bg-background text-foreground flex h-screen flex-col">
-    <header class="bg-muted/40 border-border shrink-0 border-b p-4 shadow-sm">
-      <h1 class="text-xl font-semibold">MarkFlow Header Placeholder</h1>
-    </header>
+    <AppHeader />
 
     <main class="flex flex-1 flex-row overflow-hidden">
-      <div class="bg-card text-card-foreground flex-1 overflow-y-auto p-4">
+      <div v-if="viewConfigStore.showEditor" :class="editorPanelClasses">
         <EditorMarkdownEditor />
       </div>
 
-      <div class="bg-border w-px shrink-0"></div>
+      <div
+        v-if="viewConfigStore.currentViewMode === 'split'"
+        class="bg-border w-px shrink-0"
+      ></div>
 
-      <div class="bg-card text-card-foreground flex-1 overflow-y-auto p-4">
+      <div v-if="viewConfigStore.showPreview" :class="previewPanelClasses">
         <EditorMarkdownPreview />
       </div>
     </main>
