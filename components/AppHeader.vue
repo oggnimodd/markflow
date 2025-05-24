@@ -45,7 +45,7 @@ watch(copied, (isCopied) => {
       <EditorViewModeToggle />
       <div class="bg-border h-6 w-px" />
       <Button
-        variant="outline"
+        variant="default"
         size="sm"
         @click="handleGenerateAndCopyPrompt"
         title="Generate & Copy AI Prompt"

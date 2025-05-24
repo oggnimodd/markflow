@@ -5,8 +5,36 @@ import {
   Columns2,
   ClipboardList,
 } from "lucide-vue-next";
+import { useActiveElement, useMagicKeys, whenever } from "@vueuse/core";
+import { computed } from "vue";
 
 const viewConfigStore = useViewConfigStore();
+
+// Set up magic keys
+const activeElement = useActiveElement();
+const notUsingInput = computed(
+  () =>
+    activeElement.value?.tagName !== "INPUT" &&
+    activeElement.value?.tagName !== "TEXTAREA" &&
+    !activeElement.value?.isContentEditable
+);
+
+const { ctrl_1 } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.ctrlKey && e.key === "1" && e.type === "keydown") {
+      e.preventDefault();
+    }
+  },
+});
+
+// Cycle through view modes when Ctrl+1 is pressed
+whenever(
+  () => ctrl_1.value && notUsingInput.value,
+  () => {
+    viewConfigStore.cycleViewMode();
+  }
+);
 </script>
 
 <template>
