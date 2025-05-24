@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "generatedAt": "2025-05-24T04:31:45.028Z",
+    "tasksAnalyzed": 9,
+    "thresholdScore": 5,
+    "projectName": "Taskmaster",
+    "usedResearch": false
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 2,
+      "taskTitle": "Implement Basic Two-Panel Layout and Header",
+      "complexityScore": 4,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "This task is already broken down into 5 subtasks.",
+      "reasoning": "This task involves standard web layout using Tailwind CSS. It's broken down into 5 logical steps covering the header, main content container, panel structure, basic styling, and space filling, which is appropriate for its complexity."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Create Markdown Editor Component",
+      "complexityScore": 2,
+      "recommendedSubtasks": 2,
+      "expansionPrompt": "Break down the task of creating a basic Markdown editor component using a textarea and Vue's v-model into smaller steps.",
+      "reasoning": "Creating a simple Vue component with a textarea and basic reactivity is a low-complexity task. It can be broken into creating the component file and implementing the textarea with v-model."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Integrate Markdown Parser and Create Live Preview",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the task of integrating a Markdown parser (like marked.js) and creating a live preview component that receives editor content and renders parsed HTML.",
+      "reasoning": "This involves integrating an external library, creating a new component, handling props, using v-html (which requires care), and potentially debouncing updates. It's moderately complex and benefits from breaking down into library installation, component creation, parsing/rendering logic, and integration."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Implement View Mode Switching",
+      "complexityScore": 4,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the task of implementing view mode switching (Editor Only, Preview Only, Split View) using UI buttons and conditional rendering/styling.",
+      "reasoning": "This requires adding UI elements, managing application state for the current mode, and dynamically applying styles or using conditional rendering to change the layout. It's a moderate UI/state management task."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Implement Text Selection Detection in Preview",
+      "complexityScore": 3,
+      "recommendedSubtasks": 2,
+      "expansionPrompt": "Break down the task of detecting text selections within the preview panel using JavaScript event listeners and the Selection API.",
+      "reasoning": "This involves adding a DOM event listener and using browser APIs (`window.getSelection`). While basic detection is straightforward, handling edge cases can add complexity, but for a basic implementation, 2 steps (add listener, get selection) are sufficient."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Implement Basic Annotation Input UI",
+      "complexityScore": 5,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the task of displaying an 'Add Comment' UI element upon text selection and opening a modal for comment input using shadcn-vue components.",
+      "reasoning": "This involves conditional rendering of UI based on user interaction (selection), integrating multiple UI components (button, dialog, textarea), and managing modal state. Positioning the initial button near the selection adds potential complexity."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Implement Annotation Data Structure and Visual Highlighting",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the task of defining annotation data structures, storing annotations in application state, and implementing visual highlighting of annotated text in the preview panel.",
+      "reasoning": "Defining data structures and storing state is simple. The complexity lies in reliably highlighting specific text within the rendered HTML, which often requires finding DOM nodes corresponding to the selected text and wrapping them, a process that can be fragile and complex, especially with dynamic content."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Implement Local Data Persistence",
+      "complexityScore": 4,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the task of saving and loading the Markdown content and annotations using the browser's localStorage API.",
+      "reasoning": "Using localStorage is a standard web task. The complexity comes from deciding when to save (e.g., debouncing) and handling the initial load state. Breaking it into saving content, saving annotations, and loading on startup covers the main aspects."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Implement Concatenated Prompt Generation",
+      "complexityScore": 3,
+      "recommendedSubtasks": 3,
+      "expansionPrompt": "Break down the task of generating a concatenated prompt from all annotations and displaying it in a modal with a copy-to-clipboard option.",
+      "reasoning": "This involves iterating through data, formatting strings, displaying content in a modal, and using the clipboard API. These are relatively straightforward tasks."
+    }
+  ]
+}

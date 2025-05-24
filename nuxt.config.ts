@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   vite: { plugins: [tailwindcss()] },
-  modules: ["@nuxtjs/color-mode", "shadcn-nuxt"],
+  modules: ["@nuxtjs/color-mode", "shadcn-nuxt", "@pinia/nuxt"],
   colorMode: {
     classSuffix: "",
   },

@@ -1,0 +1,317 @@
+<context>
+# Overview
+MarkFlow is a dedicated, personal markdown editor and annotation tool designed to enhance textual analysis and streamline the process of refining prompts for AI interactions. It solves the problem of inefficiently managing and iterating on text, especially when preparing detailed contexts or questions for AI models. MarkFlow is for individuals who work deeply with text, such as AI users, writers, researchers, and developers, who need to analyze, comment on, and structure textual information effectively. Its value lies in providing a highly intuitive, client-side environment for deep engagement with text, facilitating precise annotations and the generation of structured prompts for clearer AI communication.
+
+# Core Features
+
+1.  **Dynamic Two-Panel Layout (Editor & Preview)**
+    *   **What it does:** Presents a synchronized Markdown editor on the left and a live Markdown preview on the right.
+    *   **Why it's important:** Allows users to see the direct output of their Markdown as they type, ensuring accuracy and facilitating a smooth editing workflow.
+    *   **How it works:** The left panel is a text input area. The right panel renders the Markdown content from the editor in real-time using a Markdown parsing library.
+
+2.  **Comprehensive Markdown Support**
+    *   **What it does:** Supports a wide range of Markdown syntax, from basic formatting to complex structures.
+    *   **Why it's important:** Caters to various content types, including AI-generated text which often uses diverse Markdown elements, ensuring faithful representation and editing capabilities.
+    *   **How it works:** Integrates a robust Markdown parsing and rendering engine (e.g., `marked.js` or `markdown-it`).
+
+3.  **Switchable Viewing Modes**
+    *   **What it does:** Offers three viewing modes: Editor Only, Preview Only, and Split View.
+    *   **Why it's important:** Accommodates different user preferences and focus needs during various stages of text interaction (e.g., focused writing vs. review).
+    *   **How it works:** A header toolbar with controls allows users to toggle the visibility and layout of the editor and preview panels.
+
+4.  **Interactive Markdown Preview & Annotation**
+    *   **What it does:** Allows users to select any portion of the rendered text in the preview panel. Upon selection, a UI element prompts them to add a comment. Comments are linked to the selected text, which is then visually distinguished.
+    *   **Why it's important:** This is the core of the tool's analytical power, enabling users to directly engage with specific parts of the text, ask questions, or make notes, turning passive reading into active analysis.
+    *   **How it works:**
+        *   Uses browser DOM events to detect text selection in the preview panel.
+        *   Displays a small button/tooltip near the selection.
+        *   Clicking this button opens a modal or sidebar input area for the comment.
+        *   The selected text and the comment are stored.
+        *   The selected text in the preview is highlighted or underlined using dynamic styling.
+
+5.  **Annotation Management & Display**
+    *   **What it does:** Organizes all comments within a dedicated sidebar, similar to Notion or Google Docs. Hovering over marked text in the preview re-displays associated comment(s) with options to edit or delete. Supports multiple comments on the same text selection.
+    *   **Why it's important:** Provides a clear, accessible overview of all annotations, making it easy to review, manage, and navigate through commentary.
+    *   **How it works:**
+        *   A sidebar component lists all annotations. Each entry links back to the highlighted text.
+        *   Hover events on highlighted text trigger a popover or tooltip displaying the comment(s).
+        *   UI elements within this display allow for editing (opening the comment input with existing text) or deleting the comment.
+
+6.  **Local Data Persistence**
+    *   **What it does:** Intelligently retains the markdown content and all associated comments within the user's browser.
+    *   **Why it's important:** Allows users to close the application and return later, picking up exactly where they left off without losing work, ensuring a seamless and private experience.
+    *   **How it works:** Utilizes browser `localStorage` or `IndexedDB` to save and retrieve the document content and annotation data.
+
+7.  **Concatenated Prompt Generation**
+    *   **What it does:** Gathers all highlighted text excerpts and their corresponding comments, compiling them into a single, structured markdown output.
+    *   **Why it's important:** Streamlines the creation of detailed, contextualized prompts for AI models, making follow-up interactions more targeted and efficient.
+    *   **How it works:**
+        *   A user action (e.g., button click) triggers the process.
+        *   The application iterates through all annotations.
+        *   It formats each original selected text snippet (quoted) and its associated user comment(s) into a structured Markdown string.
+        *   The final compiled string is made available for easy copying.
+
+# User Experience
+
+*   **User Personas:**
+    *   **AI Power User:** Individuals frequently interacting with LLMs, needing to refine prompts, provide detailed context, or analyze AI responses.
+    *   **Writer/Editor:** Professionals working on drafting, reviewing, and annotating documents.
+    *   **Researcher/Student:** Individuals conducting textual analysis, taking notes on papers, or preparing summaries.
+    *   **Developer:** Programmers documenting code, reviewing technical specifications, or preparing AI prompts for code generation/explanation.
+
+*   **Key User Flows:**
+    1.  **Starting a New Session/Pasting Content:**
+        *   User opens the app.
+        *   User types directly into the Markdown editor OR pastes a large block of text.
+        *   Content appears in the editor, and its rendered version appears in the preview.
+    2.  **Editing Markdown:**
+        *   User modifies text in the editor.
+        *   Preview updates in real-time.
+    3.  **Changing View Mode:**
+        *   User clicks a view mode button in the header (Editor Only, Preview Only, Split View).
+        *   Layout adjusts accordingly.
+    4.  **Annotating Text:**
+        *   User selects text in the Markdown Preview.
+        *   A small UI element (e.g., "Add Comment" button) appears.
+        *   User clicks the button.
+        *   A comment input area (modal/sidebar) opens.
+        *   User types their comment and submits.
+        *   Comment is saved; selected text in preview is highlighted/underlined.
+        *   Comment appears in the annotation sidebar.
+    5.  **Managing Annotations:**
+        *   User hovers over highlighted text in the preview: associated comment(s) display.
+        *   User clicks "Edit" on a comment: input area opens with existing text for modification.
+        *   User clicks "Delete" on a comment: comment is removed.
+        *   User browses comments in the annotation sidebar.
+    6.  **Generating Concatenated Prompt:**
+        *   User clicks the "Generate Prompt" button.
+        *   A compiled Markdown output (original text + comments) is generated.
+        *   User copies the generated prompt.
+    7.  **Resuming Work:**
+        *   User closes the browser/tab.
+        *   User reopens the app.
+        *   Previous Markdown content and annotations are automatically loaded.
+
+*   **UI/UX Considerations:**
+    *   **Intuitive Interface:** Clean, uncluttered, and easy to understand without a steep learning curve.
+    *   **Fluidity & Responsiveness:** Real-time preview updates and smooth interactions are critical. The application must perform well even with large documents.
+    *   **Clear Visual Cues:** Annotated text should be clearly distinguishable. Comment pop-ups/tooltips should be non-intrusive but easily discoverable.
+    *   **Accessibility:** Ensure good contrast, keyboard navigability, and ARIA attributes where appropriate.
+    *   **Minimalism:** Focus on the core tasks of editing, annotating, and prompt generation. Avoid feature bloat.
+    *   **Consistency:** UI elements and interactions should be consistent throughout the application.
+    *   **Comment Management:** The annotation sidebar should be well-organized and easy to navigate, drawing inspiration from Notion/Google Docs.
+    *   **shadcn-vue & Tailwind CSS:** Leverage these for a modern, utility-first, and customizable UI that is also accessible by default.
+</context>
+<PRD>
+# Technical Architecture
+
+*   **System Components:**
+    *   **Frontend Framework:** Nuxt.js (v3+)
+    *   **View Library:** Vue.js (v3+)
+    *   **UI Styling:** Tailwind CSS
+    *   **UI Components:** shadcn-vue (built on Radix Vue and Tailwind CSS)
+    *   **Markdown Engine:** A JavaScript Markdown parser and renderer (e.g., `marked.js`, `markdown-it`).
+    *   **State Management:** Vue's built-in reactivity system. Pinia can be considered if state complexity grows significantly.
+    *   **Local Persistence:** Browser `localStorage` API for storing markdown content and annotations. `IndexedDB` could be a future consideration for larger data or more complex querying, but `localStorage` is sufficient for MVP.
+    *   **Text Selection Handling:** Native browser DOM Selection API.
+
+*   **Data Models (for `localStorage`):**
+    *   **`Document` (singular, as it's a personal tool for the current session/document):**
+        *   `id`: `string` (e.g., a default ID like "current-document")
+        *   `markdownContent`: `string` (The raw Markdown text)
+        *   `updatedAt`: `timestamp`
+    *   **`Annotations` (stored as an array under a key like `document-annotations`):**
+        *   Array of `Annotation` objects:
+            *   `id`: `string` (UUID for the annotation group on a specific text selection)
+            *   `selectedText`: `string` (The actual text content that was selected. Used for display and potentially for re-finding if precise indices fail)
+            *   `startIndex`: `number` (Character offset of selection start within the *rendered* preview, or a more robust identifier if possible. This is a challenge.)
+            *   `endIndex`: `number` (Character offset of selection end.)
+            *   Alternative for selection: A unique ID assigned to a `<span>` wrapped around the selected text dynamically.
+            *   `comments`: Array of `Comment` objects:
+                *   `commentId`: `string` (UUID for the individual comment)
+                *   `text`: `string` (The content of the comment)
+                *   `createdAt`: `timestamp`
+                *   `updatedAt`: `timestamp`
+            *   `createdAt`: `timestamp` (for the annotation itself)
+
+*   **APIs and Integrations:**
+    *   **Internal:**
+        *   Communication between Editor component and Preview component via Vue's reactivity (props, events, or shared state).
+        *   Interaction with `localStorage` for saving and loading data.
+    *   **External:** No external API integrations are planned for the MVP.
+
+*   **Infrastructure Requirements:**
+    *   Client-side application.
+    *   Can be hosted on any static web hosting provider (e.g., Vercel, Netlify, GitHub Pages).
+    *   Requires a modern web browser with JavaScript enabled and support for `localStorage`.
+
+# Development Roadmap
+
+*   **MVP Requirements (Phase 1: Core Functionality)**
+    1.  **Basic Setup & Layout:**
+        *   Nuxt.js project initialized (`/home/orenji/coding/markflow`).
+        *   Tailwind CSS and shadcn-vue integrated and configured.
+        *   Main page (`pages/index.vue`) with a basic two-column layout structure.
+        *   Header toolbar placeholder.
+    2.  **Markdown Editor & Live Preview:**
+        *   Left Panel: A simple `<textarea>` or a basic code editor component for Markdown input.
+        *   Right Panel: Area for rendered Markdown.
+        *   Integrate a Markdown library (e.g., `marked.js`) to parse editor content and render HTML in the preview panel.
+        *   Real-time updates from editor to preview.
+    3.  **View Modes:**
+        *   Implement shadcn-vue `Button` components in the header toolbar for: Editor Only, Preview Only, Split View.
+        *   Logic to dynamically adjust panel visibility/layout based on selected mode.
+    4.  **Text Selection & Basic Commenting UI:**
+        *   Enable text selection in the Markdown Preview panel.
+        *   On text selection, display a simple shadcn-vue `Button` or `Tooltip` ("Add Comment").
+        *   Clicking "Add Comment" opens a shadcn-vue `Dialog` (modal) with a `Textarea` for comment input and a "Submit" button.
+    5.  **Annotation Creation & Visual Indication:**
+        *   On comment submission, store the selected text and the comment.
+        *   Visually distinguish the selected text in the preview (e.g., wrap it in a `<span>` with a background color or underline).
+        *   This requires careful handling of the rendered HTML.
+    6.  **Local Persistence (Markdown & Annotations):**
+        *   Save the current Markdown content to `localStorage` on change (debounced).
+        *   Save the list of annotations (selected text + comments) to `localStorage`.
+        *   Load Markdown content and annotations from `localStorage` when the app starts.
+    7.  **Basic Annotation Display (List):**
+        *   A simple, non-interactive list displaying comments in a sidebar area. Each item shows the selected text snippet and the comment.
+    8.  **Concatenated Prompt Generation (Basic):**
+        *   A shadcn-vue `Button` ("Generate Prompt").
+        *   On click, iterate through stored annotations.
+        *   Compile a string: `> [Selected Text 1]\n\n[Comment 1]\n\n---\n\n> [Selected Text 2]\n\n[Comment 2]...`
+        *   Display this string in a `Textarea` within a `Dialog` with a "Copy to Clipboard" button.
+
+*   **Phase 2: Enhanced Annotations & UX**
+    1.  **Interactive Annotation Sidebar:**
+        *   Redesign the annotation list into a proper sidebar (Notion/Google Docs style).
+        *   Clicking an annotation in the sidebar scrolls to/highlights the corresponding text in the preview.
+        *   Use shadcn-vue components for a polished look and feel.
+    2.  **Hover-to-View Comments:**
+        *   When hovering over highlighted/annotated text in the preview, display the associated comment(s) in a shadcn-vue `Popover` or `Tooltip`.
+    3.  **Edit/Delete Comments:**
+        *   Provide "Edit" and "Delete" options within the hover popover and/or the annotation sidebar.
+        *   Edit: Opens the comment input modal pre-filled with the existing comment.
+        *   Delete: Removes the comment and potentially the highlight if no other comments exist for that selection.
+    4.  **Multiple Comments on Same Selection:**
+        *   Adapt data model and UI to support adding multiple distinct comments to the exact same piece of selected text.
+        *   The hover popover and sidebar should list all comments for that selection.
+    5.  **Improved Selection-to-Annotation Linking:**
+        *   Investigate more robust methods for linking annotations to text selections that are resilient to minor edits in the Markdown (e.g., using character offsets relative to source Markdown, or stable unique IDs injected into the rendered HTML). This is a complex area. For now, rely on exact text match or simple span IDs.
+
+*   **Future Enhancements (Post-MVP/Phase 3+):**
+    *   **Rich Text Editor for Comments:** Allow basic formatting within comments.
+    *   **Advanced Markdown Support:** Ensure full GFM compatibility (tables, task lists, etc.).
+    *   **Search/Filter Annotations:** Ability to search comment text or filter annotations.
+    *   **Syntax Highlighting in Editor:** Use a library like CodeMirror or Monaco Editor for a better Markdown editing experience.
+    *   **Theming:** Dark/Light mode toggle.
+    *   **Export/Import:** Allow users to export their markdown and annotations (e.g., as a JSON file or enhanced Markdown) and import them back.
+    *   **Customizable Highlighting:** Allow users to choose highlight colors or styles.
+    *   **Collaboration (Very Long Term):** Real-time multi-user editing and commenting (significant architectural change).
+
+# Logical Dependency Chain
+
+1.  **Foundation & Core UI Setup (Visible Shell):**
+    *   Nuxt.js app (`app.vue`, `pages/index.vue`).
+    *   Integrate Tailwind CSS, `shadcn-vue/ui/button`, `shadcn-vue/ui/dropdown-menu` (for view modes).
+    *   Basic two-panel structure for Editor & Preview.
+    *   Header with placeholder for view mode controls.
+    *   This gives an immediate visual structure to build upon.
+
+2.  **Editor to Preview Pipeline (Core Interaction):**
+    *   Implement a simple `Textarea` as the Markdown Editor.
+    *   Choose and integrate a Markdown rendering library (e.g., `marked.js`).
+    *   Wire up state so typing in the editor updates the preview panel in real-time. This is the fundamental editing loop.
+
+3.  **View Mode Switching (Basic Usability):**
+    *   Implement the view mode buttons in the header using `shadcn-vue/button`.
+    *   Add logic to toggle the visibility/layout of the editor and preview panels.
+
+4.  **Text Selection in Preview (Prerequisite for Annotation):**
+    *   Implement JavaScript to detect and capture `mouseup` events and `window.getSelection()` in the preview panel.
+
+5.  **Basic Annotation Input & Storage (First Annotation Feature):**
+    *   On text selection, show a `shadcn-vue/button` (e.g., "Add Comment").
+    *   Clicking it opens a `shadcn-vue/dialog` with a `Textarea` and "Save" button.
+    *   On save, store the selected text and comment in a simple JavaScript array in memory.
+    *   Visually mark the selected text in the preview (e.g., simple `<span>` with a background color). This makes the annotation visible.
+
+6.  **Local Persistence (Data Safety):**
+    *   Implement functions to save the editor's Markdown content and the in-memory annotations array to `localStorage`.
+    *   Implement functions to load this data when the app starts.
+    *   This makes the tool usable across sessions.
+
+7.  **Basic Concatenated Prompt Generation (Core Value Proposition):**
+    *   Add a "Generate Prompt" `shadcn-vue/button`.
+    *   Function to iterate over stored annotations, format them into the specified Markdown structure.
+    *   Display in a `Dialog` with a "Copy" button. This delivers on a key promise quickly.
+
+8.  **Iterative Refinement & Feature Expansion (Building on MVP):**
+    *   **Improved Annotation Sidebar:** Transition from a simple list to an interactive `shadcn-vue` powered sidebar.
+    *   **Hover/Edit/Delete Comments:** Add these interactions using `Popover`, `Dialog` etc.
+    *   **Multiple Comments per Selection:** Adapt data structures and UI.
+    *   **Advanced Editor/Preview Features:** Gradually enhance based on roadmap.
+
+# Risks and Mitigations
+
+*   **Technical Challenges:**
+    *   **Robust Text Selection to Markdown Mapping:** Accurately and reliably linking a selection in rendered HTML back to the original Markdown source, especially if the Markdown is edited after annotation, is highly complex.
+        *   **Mitigation (MVP):** For MVP, assume the Markdown content related to an annotation is relatively static once annotated. Store the `selectedText` itself. If the source text changes significantly, annotations might become "orphaned" or point to the wrong text. More robust solutions (diffing, custom AST markers) are post-MVP.
+        *   **Mitigation (Long-term):** Research libraries or techniques for mapping HTML selections to source text more reliably (e.g., injecting unique IDs into elements during Markdown rendering, then referencing those IDs).
+    *   **State Management Complexity with Annotations:** Managing the array of annotations, their link to DOM elements, and updates can become complex.
+        *   **Mitigation:** Start with Vue's reactivity and simple data structures. Clearly define the annotation data model. If needed, introduce Pinia for more structured state management. Keep components focused.
+    *   **Performance with Large Documents/Many Annotations:** Real-time preview, rendering highlights, and managing many annotations could lead to performance issues.
+        *   **Mitigation:** Debounce editor updates. For annotation display, consider virtual scrolling if lists become very long. Optimize rendering of highlights.
+
+*   **Figuring out the MVP that we can build upon:**
+    *   **Risk:** Scope creep, trying to build too many "nice-to-have" features into the MVP, delaying a usable version.
+        *   **Mitigation:** Strictly follow the "MVP Requirements" in the Development Roadmap and the "Logical Dependency Chain." Prioritize the core loop: Edit -> Preview -> Select -> Basic Comment -> Generate Prompt. Defer UI polish and advanced annotation management features if they threaten MVP delivery.
+
+*   **Resource Constraints:** (Assuming limited developer resources/time)
+    *   **Risk:** Slow development pace, inability to address all features or fix bugs promptly.
+        *   **Mitigation:** Leverage `shadcn-vue` and other libraries as much as possible to avoid reinventing the wheel for UI components and core functionalities (like Markdown parsing). Focus on delivering value incrementally. Be ruthless in prioritization.
+
+# Appendix
+
+*   **Primary Technologies:**
+    *   Nuxt.js (v3+)
+    *   Vue.js (v3+)
+    *   Tailwind CSS
+    *   shadcn-vue
+*   **Key Libraries to Integrate:**
+    *   Markdown Parser/Renderer: e.g., `marked.js`, `markdown-it` (evaluate for features like source mapping if available).
+    *   (Potentially) ID Generation: `uuid` for unique IDs for annotations/comments.
+*   **Current Folder Structure (Reference):**
+    ```
+    /home/orenji/coding/markflow
+    ├── app.vue
+    ├── assets
+    │   └── css
+    │       └── main.css
+    ├── biome.json
+    ├── bun.lock
+    ├── components
+    │   └── ui
+    │       ├── button
+    │       │   ├── Button.vue
+    │       │   └── index.ts
+    │       └── dropdown-menu
+    │           ├── ... (shadcn-vue components)
+    │           └── index.ts
+    ├── components.json
+    ├── lib
+    │   └── utils.ts
+    ├── nuxt.config.ts
+    ├── package.json
+    ├── pages
+    │   └── index.vue
+    ├── prettier.config.js
+    ├── public
+    │   ├── favicon.ico
+    │   └── robots.txt
+    ├── README.md
+    ├── server
+    │   └── tsconfig.json
+    └── tsconfig.json
+    ```
+    This structure is a good starting point for a Nuxt.js application utilizing shadcn-vue. Custom application components (e.g., `MarkdownEditor.vue`, `MarkdownPreview.vue`, `AnnotationSidebar.vue`) will be added under `/components`.
+</PRD>

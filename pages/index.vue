@@ -1,41 +1,29 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-const colorMode = useColorMode();
+const documentStore = useDocumentStore();
 </script>
 
 <template>
-  <DropdownMenu>
-    <DropdownMenuTrigger as-child>
-      <Button variant="outline">
-        <Icon
-          icon="radix-icons:moon"
-          class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
-        />
-        <Icon
-          icon="radix-icons:sun"
-          class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
-        />
-        <span class="sr-only">Toggle theme</span>
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end">
-      <DropdownMenuItem @click="colorMode.preference = 'light'">
-        Light
-      </DropdownMenuItem>
-      <DropdownMenuItem @click="colorMode.preference = 'dark'">
-        Dark
-      </DropdownMenuItem>
-      <DropdownMenuItem @click="colorMode.preference = 'system'">
-        System
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+  <div class="bg-background text-foreground flex h-screen flex-col">
+    <header class="bg-muted/40 border-border shrink-0 border-b p-4 shadow-sm">
+      <h1 class="text-xl font-semibold">MarkFlow Header Placeholder</h1>
+    </header>
+
+    <main class="flex flex-1 flex-row overflow-hidden">
+      <div class="bg-card text-card-foreground flex-1 overflow-y-auto p-4">
+        <EditorMarkdownEditor />
+      </div>
+
+      <div class="bg-border w-px shrink-0"></div>
+
+      <div class="bg-card text-card-foreground flex-1 overflow-y-auto p-4">
+        Preview Panel
+        <p class="text-muted-foreground mt-4">
+          Current Editor Content (from Pinia Store for debugging):
+        </p>
+        <pre class="text-foreground/80 text-sm whitespace-pre-wrap">{{
+          documentStore.markdownContent
+        }}</pre>
+      </div>
+    </main>
+  </div>
 </template>
