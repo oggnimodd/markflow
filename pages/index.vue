@@ -3,13 +3,17 @@ import { cn } from "~/lib/utils";
 
 const viewConfigStore = useViewConfigStore();
 
+const isSplitMode = computed(() => viewConfigStore.currentViewMode === "split");
+
 const panelClass = computed(() =>
   cn(
-    "bg-card text-card-foreground overflow-y-auto p-4",
-    viewConfigStore.currentViewMode === "split"
-      ? "flex-1"
-      : "w-full max-w-4xl mx-auto"
+    "bg-card text-card-foreground overflow-y-auto",
+    isSplitMode.value ? "flex-1" : "w-full"
   )
+);
+
+const previewContentClass = computed(() =>
+  cn("p-4", !isSplitMode.value && "mx-auto max-w-4xl")
 );
 </script>
 
@@ -18,17 +22,21 @@ const panelClass = computed(() =>
     <AppHeader />
 
     <main class="flex flex-1 flex-row overflow-hidden">
+      <!-- Editor Panel -->
       <div v-if="viewConfigStore.showEditor" :class="panelClass">
-        <EditorMarkdownEditor />
+        <div class="flex h-full flex-col p-4">
+          <EditorMarkdownEditor class="min-h-0 flex-1" />
+        </div>
       </div>
 
-      <div
-        v-if="viewConfigStore.currentViewMode === 'split'"
-        class="bg-border w-px shrink-0"
-      ></div>
+      <!-- Divider -->
+      <div v-if="isSplitMode" class="bg-border w-px shrink-0" />
 
+      <!-- Preview Panel -->
       <div v-if="viewConfigStore.showPreview" :class="panelClass">
-        <EditorMarkdownPreview />
+        <div :class="previewContentClass">
+          <EditorMarkdownPreview />
+        </div>
       </div>
     </main>
   </div>
