@@ -131,7 +131,7 @@ const handleClickOutside = (event: MouseEvent) => {
 
 const handleCommentSubmit = () => {
   if (commentText.value.trim() && selectionStore.currentSelection) {
-    annotationStore.addCommentToAnnotation(
+    annotationStore.addAnnotation(
       selectionStore.currentSelection.text,
       commentText.value.trim()
     );
