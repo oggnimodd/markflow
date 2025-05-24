@@ -2,12 +2,14 @@
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
-
 import vue from "highlight.js/lib/languages/xml";
 
 hljs.registerLanguage("vue", vue);
 
 const documentStore = useDocumentStore();
+const selectionStore = useSelectionStore();
+
+const previewPanelRef = ref<HTMLDivElement | null>(null);
 
 const md: MarkdownIt = new MarkdownIt({
   html: true,
@@ -38,8 +40,41 @@ const renderedHtml = computed(() => {
   }
   return md.render(documentStore.markdownContent);
 });
+
+const handleMouseUp = () => {
+  if (!previewPanelRef.value) return;
+
+  const selection = window.getSelection();
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    if (previewPanelRef.value.contains(range.commonAncestorContainer)) {
+      const selectedText = selection.toString().trim();
+      if (selectedText) {
+        selectionStore.setSelectedText(selectedText);
+      } else {
+        selectionStore.setSelectedText("");
+      }
+    } else {
+      selectionStore.clearSelection();
+    }
+  } else {
+    selectionStore.clearSelection();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("mouseup", handleMouseUp);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("mouseup", handleMouseUp);
+});
 </script>
 
 <template>
-  <div class="prose dark:prose-invert max-w-none" v-html="renderedHtml"></div>
+  <div
+    ref="previewPanelRef"
+    class="prose dark:prose-invert max-w-none"
+    v-html="renderedHtml"
+  ></div>
 </template>

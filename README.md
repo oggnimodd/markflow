@@ -25,7 +25,7 @@
 - [x] **Task 5: Implement View Mode Switching**
   - Implement the UI controls and logic in the header toolbar to switch between Editor Only, Preview Only, and Split View modes.
 
-- [ ] **Task 6: Implement Text Selection Detection in Preview**
+- [x] **Task 6: Implement Text Selection Detection in Preview**
   - Add JavaScript event listeners to the Markdown preview panel to detect user text selections.
 
 - [ ] **Task 7: Implement Basic Annotation Input UI**
