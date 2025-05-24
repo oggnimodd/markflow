@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ClipboardCopy } from "lucide-vue-next";
+import { ClipboardCopy, HelpCircle } from "lucide-vue-next";
 import {
   useClipboard,
   useMagicKeys,
@@ -20,6 +20,8 @@ const notUsingInput = computed(
     activeElement.value?.tagName !== "TEXTAREA" &&
     !activeElement.value?.isContentEditable
 );
+
+const showShortcutsGuide = ref(false);
 
 const handleGenerateAndCopyPrompt = async () => {
   if (!isSupported.value) {
@@ -55,13 +57,14 @@ const handleClearAllAnnotations = () => {
   toast.success("All annotations cleared!");
 };
 
-const { alt_k, alt_p } = useMagicKeys({
+const { alt_k, alt_p, shift_slash } = useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (notUsingInput.value) {
       if (
         (e.altKey && e.key === "k" && e.type === "keydown") ||
-        (e.altKey && e.key === "p" && e.type === "keydown")
+        (e.altKey && e.key === "p" && e.type === "keydown") ||
+        (e.shiftKey && e.key === "/" && e.type === "keydown")
       ) {
         e.preventDefault();
       }
@@ -75,6 +78,10 @@ whenever(logicAnd(alt_k, notUsingInput), () => {
 
 whenever(logicAnd(alt_p, notUsingInput), () => {
   handleGenerateAndCopyPrompt();
+});
+
+whenever(logicAnd(shift_slash, notUsingInput), () => {
+  showShortcutsGuide.value = !showShortcutsGuide.value;
 });
 </script>
 
@@ -95,6 +102,18 @@ whenever(logicAnd(alt_p, notUsingInput), () => {
         <ClipboardCopy class="mr-2 h-4 w-4" />
         Generate Prompt
       </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        @click="showShortcutsGuide = true"
+        title="Keyboard Shortcuts (?)"
+      >
+        <HelpCircle class="h-5 w-5" />
+      </Button>
     </div>
+
+    <Dialog v-model:open="showShortcutsGuide">
+      <KeyboardShortcutsGuide />
+    </Dialog>
   </header>
 </template>
