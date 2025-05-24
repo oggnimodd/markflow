@@ -5,7 +5,7 @@ const viewConfigStore = useViewConfigStore();
 
 const panelClass = computed(() =>
   cn(
-    "bg-card text-card-foreground overflow-y-auto p-4 my-4",
+    "bg-card text-card-foreground overflow-y-auto p-4",
     viewConfigStore.currentViewMode === "split"
       ? "flex-1"
       : "w-full max-w-4xl mx-auto"

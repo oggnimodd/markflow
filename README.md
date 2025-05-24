@@ -28,7 +28,7 @@
 - [x] **Task 6: Implement Text Selection Detection in Preview**
   - Add JavaScript event listeners to the Markdown preview panel to detect user text selections.
 
-- [ ] **Task 7: Implement Basic Annotation Input UI**
+- [x] **Task 7: Implement Basic Annotation Input UI**
   - Upon text selection in the preview, display an 'Add Comment' UI element and a modal for users to input their comment using shadcn-vue components.
 
 - [ ] **Task 8: Implement Annotation Data Structure and Visual Highlighting**
