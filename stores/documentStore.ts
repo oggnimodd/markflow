@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useDocumentStore = defineStore("document", {
   state: () => ({
-    markdownContent: `# Welcome to MarkFlow! (from Pinia Store)
+    markdownContent: `# Welcome to MarkFlow!
 
 This is your personal Markdown editor.
 
