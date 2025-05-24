@@ -22,7 +22,7 @@
 - [x] **Task 4: Integrate Markdown Parser and Create Live Preview**
   - Integrate a Markdown parsing library (e.g., marked.js) and create a component for the live preview panel, connecting it to the editor's content for real-time rendering.
 
-- [ ] **Task 5: Implement View Mode Switching**
+- [x] **Task 5: Implement View Mode Switching**
   - Implement the UI controls and logic in the header toolbar to switch between Editor Only, Preview Only, and Split View modes.
 
 - [ ] **Task 6: Implement Text Selection Detection in Preview**
