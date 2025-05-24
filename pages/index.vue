@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { cn } from "~/lib/utils";
+
+definePageMeta({
+  layout: "default",
+});
+
 const viewConfigStore = useViewConfigStore();
 
 const panelBaseClass = "bg-card text-card-foreground overflow-y-auto";
