@@ -6,7 +6,60 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   vite: { plugins: [tailwindcss()] },
-  modules: ["@nuxtjs/color-mode", "shadcn-nuxt", "@pinia/nuxt"],
+  modules: [
+    "@nuxtjs/color-mode",
+    "shadcn-nuxt",
+    "@pinia/nuxt",
+    "@vite-pwa/nuxt",
+  ],
+  pwa: {
+    strategies: "generateSW",
+    registerType: "autoUpdate",
+    workbox: {
+      globPatterns: [
+        "**/*.{js,css,html,ico,png,svg,vue,ts}",
+        "**/_payload.json",
+        "_nuxt/builds/**/*.json",
+      ],
+      navigateFallback: "/",
+    },
+    client: {
+      installPrompt: true,
+      registerPlugin: true,
+      periodicSyncForUpdates: 172800,
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
+      type: "module",
+    },
+    manifest: {
+      name: "Markflow App",
+      short_name: "Markflow",
+      description: "A statically generated, offline-ready Nuxt 3 application",
+      theme_color: "#ffffff",
+      lang: "en",
+      icons: [
+        {
+          src: "pwa-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+        {
+          src: "pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable",
+        },
+      ],
+    },
+  },
   colorMode: {
     classSuffix: "",
   },
@@ -20,5 +73,13 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: "./components/ui",
+  },
+  ssr: true,
+  routeRules: {
+    "/**": { static: true },
+  },
+  experimental: {
+    payloadExtraction: true,
+    appManifest: true,
   },
 });

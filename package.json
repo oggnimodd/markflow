@@ -10,12 +10,14 @@
     "postinstall": "nuxt prepare",
     "format": "prettier --write .",
     "prepare": "husky",
-    "pre-commit": "lint-staged"
+    "pre-commit": "bun x lint-staged",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.0",
     "@types/markdown-it": "^14.1.2",
     "@types/uuid": "^10.0.0",
+    "@vite-pwa/nuxt": "^1.0.4",
     "@vueuse/core": "^13.2.0",
     "@vueuse/math": "^13.2.0",
     "class-variance-authority": "^0.7.1",
@@ -41,6 +43,7 @@
     "@nuxtjs/color-mode": "^3.5.2",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.7",
+    "@vite-pwa/assets-generator": "^1.0.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
