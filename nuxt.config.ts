@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     workbox: {
       globPatterns: [
         "**/*.{js,css,html,ico,png,svg,vue,ts}",
+        "**/_payload.json",
         "_nuxt/builds/**/*.json",
       ],
       navigateFallback: "/",
@@ -75,7 +76,7 @@ export default defineNuxtConfig({
   },
   ssr: true,
   routeRules: {
-    "/**": { static: true },
+    "/**": { prerender: true },
   },
   experimental: {
     payloadExtraction: true,
