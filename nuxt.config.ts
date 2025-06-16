@@ -18,7 +18,6 @@ export default defineNuxtConfig({
     workbox: {
       globPatterns: [
         "**/*.{js,css,html,ico,png,svg,vue,ts}",
-        "**/_payload.json",
         "_nuxt/builds/**/*.json",
       ],
       navigateFallback: "/",
